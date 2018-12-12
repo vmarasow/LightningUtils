@@ -1,0 +1,12 @@
+<aura:component>
+    <aura:attribute name="location" type="String" required="true" default="global"
+    description="This attribute controls the location of the error message, available options are ['global', 'local', 'none'] "/>
+
+    <aura:method name="handleActionError" action="{!c.handleActionError}">
+        <aura:attribute name="response" type="Object" required="true" />
+    </aura:method>
+
+    <aura:method name="displayErrorMessage" action="{!c.displayErrorMessage}">
+        <aura:attribute name="message" type="String" required="true" />
+    </aura:method>
+</aura:component>
