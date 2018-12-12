@@ -1,0 +1,6 @@
+<aura:component>
+    <aura:method name="execute" action="{!c.execute}">
+        <aura:attribute name="action" type="Object" />
+        <aura:attribute name="params" type="Object" />
+    </aura:method>
+</aura:component>
