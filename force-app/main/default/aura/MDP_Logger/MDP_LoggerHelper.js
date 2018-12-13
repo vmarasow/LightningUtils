@@ -18,8 +18,8 @@
                         }
                         if (error.fieldErrors) {
                             for (const field in error.fieldErrors) {
-                                for(error of error.fieldErrors[field]) {
-                                    messages.push('['+error.statusCode+'] '+field+': '+ error.message);
+                                for (error of error.fieldErrors[field]) {
+                                    messages.push('[' + error.statusCode + '] ' + field + ': ' + error.message);
                                 }
                             }
                         }
@@ -34,7 +34,18 @@
             }
         });
     },
-    postMessage : function(message) {
+    postMessage: function (location, message) {
         // TODO: implement display functionality
+        switch (location) {
+            case 'global':
+                // TODO: Instantiate toast with message
+                break;
+            case 'local':
+                // TODO: Push the message to markup
+                break;
+            default:
+                console.error(message);
+                break;
+        }
     }
 })
