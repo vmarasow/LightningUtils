@@ -1,35 +1,40 @@
 ({
-    parseResponse : function(response) {
-        return new Promise(function(resolve, reject) {
+    parseResponse: function (response) {
+        return new Promise(function (resolve, reject) {
             if (typeof response.getState !== 'function') {
-                reject('')
+                reject('Failed to extract the error message from the response, response: ' + response);
             }
-            var errMsg = '';
+            let messages = [];
             if (response.getState() === "INCOMPLETE") {
-                errMsg = 'Server could not be reached. Check your internet connection.';
+                resolve('Server could not be reached. Check your internet connection.');
             } else if (response.getState() === "ERROR") {
                 var errors = response.getError();
-
-                if (errors) {
-                    for (var i = 0; i < errors.length; i++) {
-                        for (var j = 0; errors[i].pageErrors && j < errors[i].pageErrors.length; j++) {
-                            errMsg += (errMsg.length > 0 ? '\n' : '') + errors[i].pageErrors[j].message;
+                if (Array.isArray(errors) && errors.length > 0) {
+                    for (const error of errors) {
+                        if (error.pageErrors) {
+                            for (const pageError of error.pageErrors) {
+                                messages.push(pageError.message);
+                            }
                         }
-                        if (errors[i].fieldErrors) {
-                            for (var fieldError in errors[i].fieldErrors) {
-                                var thisFieldError = errors[i].fieldErrors[fieldError];
-                                for (var j = 0; j < thisFieldError.length; j++) {
-                                    errMsg += (errMsg.length > 0 ? '\n' : '') + thisFieldError[j].message;
+                        if (error.fieldErrors) {
+                            for (const field in error.fieldErrors) {
+                                for(error of error.fieldErrors[field]) {
+                                    messages.push('['+error.statusCode+'] '+field+': '+ error.message);
                                 }
                             }
                         }
-                        if (errors[i].message) {
-                            errMsg += (errMsg.length > 0 ? '\n' : '') + errors[i].message;
+                        if (error.message) {
+                            messages.push(error.message);
                         }
                     }
-                } else {
-                    errMsg += (errMsg.length > 0 ? '\n' : '') + 'Unknown error';
                 }
+                resolve(messages.join('\n'));
+            } else {
+                resolve('Unknown error');
+            }
         });
+    },
+    postMessage : function(message) {
+        // TODO: implement display functionality
     }
 })
